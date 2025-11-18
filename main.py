@@ -1,10 +1,10 @@
-import _lib.logger as lg
-from _lib.Config import Config
+import src._lib.logger as lg
+from src._lib.Config import Config
 import logging
-from Mqtt import Mqtt_Routine
+from src.Mqtt import Mqtt_Routine
 
 def main():
-    config = Config("/Users/dom/temp/config_deskpi.txt")
+    config = Config("/Users/dom_mini/temp/config_deskpi.txt")
 
     lg.setup_logging(config.get_item('PWDprot'), "", add_date_to_name=True)
 

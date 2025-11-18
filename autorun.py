@@ -1,7 +1,7 @@
 #!/usr/bin/python3
-from DisplayRoutine import Display_Routine
-from NetworkRoutine import Network_Routine
-from LedStripRoutine import Strip_Routine
+from src.DisplayRoutine import Display_Routine
+from src.NetworkRoutine import Network_Routine
+from src.LedStripRoutine import Strip_Routine
 from time import sleep
 
 

@@ -1,4 +1,4 @@
-CONFIG_PATH = "/Users/dom/temp/config_deskpi.txt"
+CONFIG_PATH = "/Users/dom_mini/temp/config_deskpi.txt"
 
 class Config():
     def __init__(self, path_config_file:str):

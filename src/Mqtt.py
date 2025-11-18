@@ -1,5 +1,5 @@
 import threading
-from DataExchange import Data
+from .DataExchange import Data
 import paho.mqtt.publish as publish
 from time import sleep
 
@@ -12,6 +12,7 @@ class Mqtt_Routine(threading.Thread):
     
     
     def run(self):
-        while True:            
+        while True:    
+            print("send")        
             publish.single(self.MQTT_PATH, "Hello World!", hostname=self.MQTT_SERVER)
             sleep(5)
