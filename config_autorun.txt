@@ -1,0 +1,10 @@
+// config-file for  autorun_deskpi
+
+// directories
+PWDprot: /home/pi/_prot/
+PWDlog: /home/pi/_prot/
+
+// MQTT
+IPbroker: 192.168.178.100
+topic: test_channel
+Port: 1883
