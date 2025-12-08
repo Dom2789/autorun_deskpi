@@ -3,6 +3,7 @@ import time
 from rpi_ws281x import PixelStrip, Color
 import argparse
 from datetime import datetime
+from .DataExchange import Data, LedStrip
 
 
 class Strip_Routine(threading.Thread):

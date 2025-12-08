@@ -4,13 +4,14 @@ import logging
 from src.Mqtt import Mqtt_Routine
 
 def main():
-    config = Config("/Users/dom_mini/temp/config_deskpi.txt")
+    config = Config("/Users/dom/temp/config_deskpi.txt")
 
     lg.setup_logging(config.get_item('PWDprot'), "", add_date_to_name=True)
+    logger = logging.getLogger("Main")
 
-    logging.info("Hello from autorun-deskpi!")
+    logger.info("Hello from autorun-deskpi!")
 
-    MR = Mqtt_Routine()
+    MR = Mqtt_Routine(config.get_item("IPbroker"), config.get_item("Topic"), config.get_item("Sendinterval"))
     MR.start()
 
 

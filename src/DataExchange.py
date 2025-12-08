@@ -1,4 +1,5 @@
 import threading
+from dataclasses import dataclass
 
 class Data:
     _instance = None
@@ -9,6 +10,7 @@ class Data:
             if cls._instance is None:
                 cls._instance = super(Data, cls).__new__(cls)
                 cls._instance.data = None  # Gemeinsame Datenvariable
+                cls._instance.led_strip = LedStrip(True, 150, "wipe", (255,255,255))
         return cls._instance
 
     def set_data(self, data):
@@ -16,3 +18,10 @@ class Data:
 
     def get_data(self):
         return self.data
+    
+@dataclass
+class LedStrip:
+    new_data : bool
+    brighness : int
+    mode : str
+    color : tuple[int, int, int]
