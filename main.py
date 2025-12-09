@@ -1,7 +1,8 @@
 import src._lib.logger as lg
 from src._lib.Config import Config
 import logging
-from src.Mqtt import Mqtt_Routine
+from src.MqttPublishRoutine import Mqtt_Publish_Routine
+from src.MqttSubscribeRoutine import Mqtt_Subscribe_Routine
 
 def main():
     config = Config("/Users/dom/temp/config_deskpi.txt")
@@ -11,10 +12,11 @@ def main():
 
     logger.info("Hello from autorun-deskpi!")
 
-    MR = Mqtt_Routine(config.get_item("IPbroker"), config.get_item("Topic"), config.get_item("Sendinterval"))
-    MR.start()
+    PR = Mqtt_Publish_Routine(config.get_item("IPbroker"), config.get_item("TopicPub"), config.get_item("Sendinterval"))
+    PR.start()
 
-
+    SR = Mqtt_Subscribe_Routine(config.get_item("IPbroker"), config.get_item("TopicSub"))
+    SR.start()
 
 
 if __name__ == "__main__":
