@@ -22,6 +22,19 @@ class Data:
 @dataclass
 class LedStrip:
     new_data : bool
-    brighness : int
+    brightness : int
     mode : str
     color : tuple[int, int, int]
+
+    # JSON-representation
+    """
+    {
+    "brightness": 200,
+    "mode": "wipe",
+    "color": (123,456,789),
+    }
+    """
+
+    """
+    {"brightness": 200, "mode": "wipe", "color": (123,456,789)}
+    """
