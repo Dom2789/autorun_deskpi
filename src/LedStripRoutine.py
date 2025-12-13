@@ -34,7 +34,7 @@ class Strip_Routine(threading.Thread):
         while True:
             if self.data.led_strip.new_data:
                 self.data.led_strip.new_data = False
-                self.colorWipe(self.strip, Color(self.data.led_strip.color[0],self.data.led_strip.color[1],self.data.led_strip.color[3]), 10)
+                self.colorWipe(self.strip, Color(self.data.led_strip.color[0],self.data.led_strip.color[1],self.data.led_strip.color[2]), 10)
         
             # Sleep.
             timer = 0

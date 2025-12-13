@@ -18,7 +18,7 @@ if __name__ == "__main__":
 
     DR = Display_Routine()
     NR = Network_Routine()
-    MPR = Mqtt_Publish_Routine(config.get_item("IPbroker"), config.get_item("TopicSub"))
+    MPR = Mqtt_Publish_Routine(config.get_item("IPbroker"), config.get_item("TopicPub"))
     MSR = Mqtt_Subscribe_Routine(config.get_item("IPbroker"), config.get_item("TopicSub"), parse_led_strip)
     MPR.start()
     MSR.start()

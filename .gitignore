@@ -10,5 +10,3 @@ wheels/
 .venv
 
 oled96.py
-uv.lock
-.toml
