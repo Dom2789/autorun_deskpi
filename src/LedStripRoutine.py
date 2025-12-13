@@ -5,7 +5,6 @@ import argparse
 from datetime import datetime
 from .DataExchange import Data, LedStrip
 
-
 class Strip_Routine(threading.Thread):
     def __init__(self):
         super(Strip_Routine, self).__init__()
@@ -23,11 +22,26 @@ class Strip_Routine(threading.Thread):
         self.strip = PixelStrip(LED_COUNT, LED_PIN, LED_FREQ_HZ, LED_DMA, LED_INVERT, LED_BRIGHTNESS, LED_CHANNEL)
         # Intialize the library (must be called once before other functions).
         self.strip.begin()
+        self.poll_secs = 1
+        self.data = Data()
     
     
     def run(self):
-        i = 0
+        # setting strip to color depending on season
         self.colorWipe(self.strip, self.selectColorSeasonal(), 10)
+
+        # waiting for changes
+        while True:
+            if self.data.led_strip.new_data:
+                self.data.led_strip.new_data = False
+                self.colorWipe(self.strip, Color(self.data.led_strip.color[0],self.data.led_strip.color[1],self.data.led_strip.color[3]), 10)
+        
+            # Sleep.
+            timer = 0
+            while timer < self.poll_secs:
+                time.sleep(0.01)
+                timer += 0.01
+
         """
         while True:
             print(i)
