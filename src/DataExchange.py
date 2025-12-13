@@ -10,7 +10,7 @@ class Data:
             if cls._instance is None:
                 cls._instance = super(Data, cls).__new__(cls)
                 cls._instance.data = None  # Gemeinsame Datenvariable
-                cls._instance.led_strip = LedStrip(True, 150, "wipe", (255,255,255))
+                cls._instance.led_strip = LedStrip(False, 150, "wipe", (255,255,255))
         return cls._instance
 
     def set_data(self, data):
@@ -31,10 +31,19 @@ class LedStrip:
     {
     "brightness": 200,
     "mode": "wipe",
-    "color": (123,456,789),
+    "red": 123, 
+    "green": 456, 
+    "blue": 789
     }
     """
 
     """
-    {"brightness": 200, "mode": "wipe", "color": (123,456,789)}
+    {"brightness": 200, "mode": "wipe", "red": 123, "green": 456, "blue": 789}
     """
+
+def parse_led_strip(data:Data, led:dict):
+    data.led_strip.new_data = True
+    data.led_strip.brightness = led["brightness"]
+    data.led_strip.mode = led["mode"]
+    data.led_strip.color = (led["red"], led["green"], led["blue"])
+    print(data.led_strip.__repr__())
