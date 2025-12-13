@@ -15,7 +15,7 @@ def setup_logging(path_logfile:str, name_logfile:str, add_date_to_name = False ,
         filename = path_logfile + name_logfile + ".log",
         level = level,
         style = "{",
-        format = "{asctime} {levelname:8}] {message}",
+        format = "{asctime} [{name:4}] [{levelname:8}] {message}",
         datefmt = "%d.%m.%Y %H:%M:%S"
      )
     

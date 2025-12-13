@@ -1,0 +1,12 @@
+// config-file for deskpi
+
+// directories
+PWDprot: /temp/
+PWDlog: /temp/
+
+// MQTT
+IPbroker: 192.168.178.100
+Port: 1883
+TopicPub: climate/office/2
+TopicSub: led/office/1
+Sendinterval: 15

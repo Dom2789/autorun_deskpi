@@ -4,7 +4,11 @@ from oled96 import ssd1306
 import threading
 import time
 from PIL import ImageFont
+<<<<<<< HEAD
 from src.DataExchange import Data
+=======
+from .DataExchange import Data
+>>>>>>> mqtt
 
 
 class Display_Routine(threading.Thread):
