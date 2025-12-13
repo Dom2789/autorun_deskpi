@@ -1,11 +1,7 @@
 import socket
 import time
 import threading
-<<<<<<< HEAD
-from src.DataExchange import Data
-=======
 from .DataExchange import Data
->>>>>>> mqtt
 
 class Network_Routine(threading.Thread):
     def __init__(self):
