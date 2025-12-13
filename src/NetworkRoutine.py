@@ -1,7 +1,7 @@
 import socket
 import time
 import threading
-from DataExchange import Data
+from .DataExchange import Data
 
 class Network_Routine(threading.Thread):
     def __init__(self):
