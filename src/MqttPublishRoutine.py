@@ -11,7 +11,7 @@ class Mqtt_Publish_Routine(threading.Thread):
         self.data = Data()
         self.MQTT_SERVER = broker_IP 
         self.MQTT_PATH = topic
-        self._logger = logging.getLogger("Mqtt Pub")
+        self._logger = logging.getLogger("MQTT Pub")
         self._logger.info(f"Broker: {self.MQTT_SERVER}, Topic: {self.MQTT_PATH}")
         if sleep_time.isnumeric():
             self.sleep_time = int(sleep_time)

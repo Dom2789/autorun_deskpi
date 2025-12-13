@@ -30,8 +30,11 @@ class Mqtt_Subscribe_Routine(threading.Thread):
                 self._logger.warning(f"Already processing a request! Missed data: {logging_string}")
             else:
                 try:
-                    self.parse_function(self.data, json_dict)
-                    self._logger.info(logging_string)
+                    fault = self.parse_function(self.data, json_dict)
+                    if fault is None:
+                        self._logger.info(logging_string)
+                    else:
+                        self._logger.error(f"{fault}]{logging_string}")
                 except KeyError as e:
                     self._logger.error(f"[Keyerror {e} in parse_function]{logging_string}")
 

@@ -30,6 +30,14 @@ class Config():
     def get_item(self, key:str) -> str:
         return self.config[key] 
     
+    def get_bool(self, key:str) -> bool:
+        if key in ["True", "False","true", "false", "1", "0"]:
+            if key == "True" or key == "true" or key == "1":
+                return True
+            else:
+                return False
+        else:
+            return False
 
 
 if __name__ == "__main__":

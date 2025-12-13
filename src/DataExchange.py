@@ -42,8 +42,24 @@ class LedStrip:
     """
 
 def parse_led_strip(data:Data, led:dict):
+    if led["red"]<0 or led["red"]>255:
+        return "Value for red out of bounds!"
+    
+    if led["green"]<0 or led["green"]>255:
+        return "Value for green out of bounds!"
+    
+    if led["blue"]<0 or led["blue"]>255:
+        return "Value for blue out of bounds!"
+    
+    if led["brightness"]<0 or led["brightness"]>255:
+        return "Value for brightness out of bounds!"
+    
+    if led["mode"] not in ["wipe", "rainbow", "chase"]:
+        return f"Invalid mode '{led["mode"]}'!"
+    
     data.led_strip.new_data = True
     data.led_strip.brightness = led["brightness"]
     data.led_strip.mode = led["mode"]
     data.led_strip.color = (led["red"], led["green"], led["blue"])
-    print(data.led_strip.__repr__())
+
+    return None

@@ -14,7 +14,7 @@ from src.DataExchange import parse_led_strip
 
 if __name__ == "__main__":
     config = Config("/home/pi/_config/config_autorun.txt")
-    lg.setup_logging(config.get_item('PWDprot'), "auto_", add_date_to_name=True)
+    lg.setup_logging(config.get_item('PWDprot'), "auto_", add_date_to_name=True, debug=config.get_bool("DEBUG"))
     logger = logging.getLogger("autorun")
 
     DR = Display_Routine()

@@ -27,18 +27,44 @@ class Strip_Routine(threading.Thread):
     
     
     def run(self):
+        mode = ""
         # setting strip to color depending on season
         self.colorWipe(self.strip, self.selectColorSeasonal(), 10)
 
         # waiting for changes
         while True:
             if self.data.led_strip.new_data:
-                self.data.led_strip.new_data = False
-                self.colorWipe(self.strip, Color(self.data.led_strip.color[0],self.data.led_strip.color[1],self.data.led_strip.color[2]), 10)
-        
-            # Sleep.
+                mode = self.data.led_strip.mode
+                color = Color(self.data.led_strip.color[0],self.data.led_strip.color[1],self.data.led_strip.color[2])
+                if mode in ["wipe", "temperature"]:
+                    self.data.led_strip.new_data = False
+
+            match mode:
+                case "wipe":
+                    self.colorWipe(self.strip, color, 10)
+                    mode = ""
+
+                case "rainbow":
+                    self.rainbowCycle(self.strip, iterations=10)
+                    color = self.selectColorSeasonal()
+                    self.data.led_strip.new_data = False
+                    mode = "wipe"
+
+                case "chase":
+                    self.theaterChase(self.strip, color, iterations=100)
+                    self.data.led_strip.new_data = False
+                    mode = "wipe"
+
+                case "temperature":
+                    # to do 
+                    # fire engine red rgb(211,33,45)
+                    # dark powder blue rgb(0,48,143)
+                    pass
+                    
+            
+            # Sleep
             timer = 0
-            while timer < self.poll_secs:
+            while (timer < self.poll_secs) and mode in ["", "temperature"]:
                 time.sleep(0.01)
                 timer += 0.01
 
@@ -50,7 +76,7 @@ class Strip_Routine(threading.Thread):
             i += 1
         """
 
-
+    
     def selectColorSeasonal(self):
         today = datetime.now()
         spring_start = datetime(today.year, 3, 20)
@@ -63,17 +89,13 @@ class Strip_Routine(threading.Thread):
 
         return color
 
-    """functions which create specific patterns"""
 
-
-    def rainbowCycle(self, strip, wait_ms=20, iterations=5):
-        """Draw rainbow that uniformly distributes itself across all pixels."""
-        for j in range(256 * iterations):
-            for i in range(strip.numPixels()):
-                strip.setPixelColor(i, self.wheel(
-                    (int(i * 256 / strip.numPixels()) + j) & 255))
+    def colorWipe(self, strip, color, wait_ms=50):
+        """Wipe color across display a pixel at a time."""
+        for i in range(strip.numPixels()):
+            strip.setPixelColor(i, color)
             strip.show()
-            time.sleep(wait_ms / 1000.0)    
+            time.sleep(wait_ms / 1000.0)       
 
 
     def wheel(self, pos):
@@ -86,35 +108,28 @@ class Strip_Routine(threading.Thread):
         else:
             pos -= 170
             return Color(0, pos * 3, 255 - pos * 3)
+        
 
-
-    def theaterChase(self, strip, color, wait_ms=50, iterations=10):
-        """Movie theater light style chaser animation."""
-        for j in range(iterations):
-            for q in range(3):
-                for i in range(0, strip.numPixels(), 3):
-                    strip.setPixelColor(i + q, color)
-                strip.show()
-                time.sleep(wait_ms / 1000.0)
-                for i in range(0, strip.numPixels(), 3):
-                    strip.setPixelColor(i + q, 0)
-           
-
-    def theaterChase(self, strip, color, wait_ms=50, iterations=10):
-        """Movie theater light style chaser animation."""
-        for j in range(iterations):
-            for q in range(3):
-                for i in range(0, strip.numPixels(), 3):
-                    strip.setPixelColor(i + q, color)
-                strip.show()
-                time.sleep(wait_ms / 1000.0)
-                for i in range(0, strip.numPixels(), 3):
-                    strip.setPixelColor(i + q, 0)
-
-
-    def colorWipe(self, strip, color, wait_ms=50):
-        """Wipe color across display a pixel at a time."""
-        for i in range(strip.numPixels()):
-            strip.setPixelColor(i, color)
+    #functions which create specific patterns
+    def rainbowCycle(self, strip, wait_ms=20, iterations=5):
+        """Draw rainbow that uniformly distributes itself across all pixels."""
+        for j in range(256 * iterations):
+            for i in range(strip.numPixels()):
+                strip.setPixelColor(i, self.wheel(
+                    (int(i * 256 / strip.numPixels()) + j) & 255))
             strip.show()
-            time.sleep(wait_ms / 1000.0)       
+            time.sleep(wait_ms / 1000.0)    
+
+
+    def theaterChase(self, strip, color, wait_ms=50, iterations=10):
+        """Movie theater light style chaser animation."""
+        for j in range(iterations):
+            for q in range(3):
+                for i in range(0, strip.numPixels(), 3):
+                    strip.setPixelColor(i + q, color)
+                strip.show()
+                time.sleep(wait_ms / 1000.0)
+                for i in range(0, strip.numPixels(), 3):
+                    strip.setPixelColor(i + q, 0)
+
+
