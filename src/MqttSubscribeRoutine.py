@@ -7,6 +7,23 @@ import logging
 import json
 from typing import Callable
 
+"""
+example telegrams:
+
+dark powder blue
+{"brightness": 200, "mode": "wipe", "red": 0, "green": 48, "blue": 143}
+
+fire engine red
+{"brightness": 200, "mode": "wipe", "red": 211, "green": 33, "blue": 45}
+
+sea green
+{"brightness": 200, "mode": "wipe", "red": 59, "green": 122, "blue": 87}
+
+amber
+{"brightness": 200, "mode": "wipe", "red": 255, "green": 191, "blue": 0}
+"""
+
+
 class Mqtt_Subscribe_Routine(threading.Thread):
     def __init__(self, broker_IP:str, topic:str, parse_func:Callable):
         super(Mqtt_Subscribe_Routine, self).__init__()

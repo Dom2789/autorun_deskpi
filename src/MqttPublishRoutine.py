@@ -16,7 +16,7 @@ class Mqtt_Publish_Routine(threading.Thread):
         if sleep_time.isnumeric():
             self.sleep_time = int(sleep_time)
         else:
-            logging.error(f"Value '{sleep_time}' given for sleep_time is not a number. sleep_time is set to default value (10).") 
+            self._logger.error(f"Value '{sleep_time}' given for sleep_time is not a number. sleep_time is set to default value (10).") 
             self.sleep_time = 10
             
 
