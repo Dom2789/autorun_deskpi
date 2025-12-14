@@ -23,7 +23,7 @@ class Mqtt_Publish_Routine(threading.Thread):
     def run(self):
         while True:   
             timestamp = strftime("%H:%M:%S")
-            data = self.data.get_data()
+            data = self.data.climate_tupel
             if data is None:
                 temp = 0.0
                 pres = 0.0
@@ -31,8 +31,12 @@ class Mqtt_Publish_Routine(threading.Thread):
             else:
                 temp, pres, humi = data
 
-            string = f"[{timestamp}] [{temp:.2f}C] [{pres:.2f}hPa] [{humi:.2f}%]"  
+                string = f"[{timestamp}] [{temp:.2f}C] [{pres:.2f}hPa] [{humi:.2f}%]"  
+                
+                try:
+                    publish.single(self.MQTT_PATH, string, hostname=self.MQTT_SERVER)
+                    self._logger.info(string)
+                except TimeoutError as e:
+                    self._logger.warning(f"[{e}][{string}")
 
-            self._logger.info(string)
-            publish.single(self.MQTT_PATH, string, hostname=self.MQTT_SERVER)
             sleep(self.sleep_time)

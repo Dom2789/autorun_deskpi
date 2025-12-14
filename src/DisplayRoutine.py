@@ -26,7 +26,7 @@ class Display_Routine(threading.Thread):
                 draw.rectangle((0,0,128,96), outline=0, fill=0)
                 # Collect Data from BME280 includes sleep(0.5)
                 temp, pres, humi = self.read_BME280(i2cbus)
-                self.data.set_data((temp, pres, humi))
+                self.data.climate_tupel =(temp, pres, humi)
                 timestamp = time.strftime("%H:%M:%S")
                 draw.text((8, 8),'Time: ' + timestamp,  font=font, fill=1)
                 draw.text((8, 22),'temp: %.2f C' %temp, font=font, fill=1)

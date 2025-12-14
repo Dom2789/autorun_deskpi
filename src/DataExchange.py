@@ -9,22 +9,33 @@ class Data:
         with cls._lock:  # Verhindert parallelen Zugriff in Multithreading-Umgebungen
             if cls._instance is None:
                 cls._instance = super(Data, cls).__new__(cls)
-                cls._instance.data = None  # Gemeinsame Datenvariable
+                cls._instance._climate_tupel = None  # Gemeinsame Datenvariable
                 cls._instance.led_strip = LedStrip(False, 150, "wipe", (255,255,255))
         return cls._instance
 
-    def set_data(self, data):
-        self.data = data
+    @property
+    def climate_tupel(self):
+        return self._climate_tupel
 
-    def get_data(self):
-        return self.data
-    
+    @climate_tupel.setter
+    def climate_tupel(self, new_value):
+        self._climate_tupel = new_value
+
+
 @dataclass
 class LedStrip:
     new_data : bool
     brightness : int
     mode : str
     color : tuple[int, int, int]
+    
+    @property
+    def color(self):
+        return self._color
+
+    @color.setter
+    def color(self, new_value):
+        self._color = new_value
 
     # JSON-representation
     """
@@ -54,7 +65,7 @@ def parse_led_strip(data:Data, led:dict):
     if led["brightness"]<0 or led["brightness"]>255:
         return "Value for brightness out of bounds!"
     
-    if led["mode"] not in ["wipe", "rainbow", "chase"]:
+    if led["mode"] not in ["wipe", "rainbow", "chase", "temperature"]:
         return f"Invalid mode '{led["mode"]}'!"
     
     data.led_strip.new_data = True

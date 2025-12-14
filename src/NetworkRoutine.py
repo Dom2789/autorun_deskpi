@@ -19,7 +19,7 @@ class Network_Routine(threading.Thread):
                 #print("[{}] {}".format(addr[0], daten.decode()))
                 trigger = daten.decode()
                 timestamp = time.strftime("%H:%M:%S")
-                data = self.data.get_data()
+                data = self.data.climate_tupel
                 if data is None:
                     temp = 0.0
                     pres = 0.0

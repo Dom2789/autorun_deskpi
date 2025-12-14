@@ -1,9 +1,9 @@
 import threading
 import time
 from rpi_ws281x import PixelStrip, Color
-import argparse
 from datetime import datetime
-from .DataExchange import Data, LedStrip
+from .DataExchange import Data
+import logging
 
 class Strip_Routine(threading.Thread):
     def __init__(self):
@@ -24,6 +24,11 @@ class Strip_Routine(threading.Thread):
         self.strip.begin()
         self.poll_secs = 1
         self.data = Data()
+        # variables for temperature gradient
+        self.gradient_colors = ((211, 22, 45), (0, 48, 143)) # fire engine red, dark powder blue
+        self.t_max = 30
+        self.t_min = 15
+        self._logger = logging.getLogger("LED_strip")
     
     
     def run(self):
@@ -37,6 +42,7 @@ class Strip_Routine(threading.Thread):
                 mode = self.data.led_strip.mode
                 color = Color(self.data.led_strip.color[0],self.data.led_strip.color[1],self.data.led_strip.color[2])
                 if mode in ["wipe", "temperature"]:
+                    i = 15
                     self.data.led_strip.new_data = False
 
             match mode:
@@ -56,11 +62,15 @@ class Strip_Routine(threading.Thread):
                     mode = "wipe"
 
                 case "temperature":
-                    # to do 
-                    # fire engine red rgb(211,33,45)
-                    # dark powder blue rgb(0,48,143)
-                    pass
-                    
+                    #gradient = self.temperature_gradient(self.data.climate_tupel[0], self.gradient_colors[1], self.gradient_colors[0])
+                    gradient = self.temperature_gradient(i, self.gradient_colors[1], self.gradient_colors[0])
+                    self._logger.debug(f"Color calculated for temperature {self.data.climate_tupel[0]}°C: {gradient}")
+                    gradient = Color(gradient[0], gradient[1], gradient[2])
+                    self.colorWipe(self.strip, gradient, 10)
+                    time.sleep(1) 
+                    i += 1
+                    if i > 30:
+                        i=15                 
             
             # Sleep
             timer = 0
@@ -133,3 +143,24 @@ class Strip_Routine(threading.Thread):
                     strip.setPixelColor(i + q, 0)
 
 
+    def temperature_gradient(self, temperature, color_low = None, color_high = None):
+        new_color = []
+        if color_low == None:
+            color_low = self.gradient_colors[0]
+
+        if color_high == None:
+            color_high = self.gradient_colors[1]
+
+        for i in range(0,3):
+            m,t = self.determine_slope_equation(color_high[i], color_low[i])
+            new_color.append(round(m*temperature+t))
+            self._logger.debug(f"{temperature} {color_high[i]}, {color_low[i]}, {m}, {t}, {new_color[-1]}")
+
+        return new_color[0], new_color[1], new_color[2]
+
+         
+    def determine_slope_equation(self, color_max, color_min):
+        m = (color_max-color_min)/(self.t_max-self.t_min)
+        t = color_max-m*self.t_max 
+        return m, t
+    

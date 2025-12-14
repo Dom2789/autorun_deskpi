@@ -6,7 +6,7 @@ def setup_logging(path_logfile:str, name_logfile:str, add_date_to_name = False ,
     if debug:
         level = logging.DEBUG
     else:
-        level = logging.INFO
+        level = logging.WARNING
 
     if add_date_to_name:
         name_logfile = f"{name_logfile}{strftime("%Y%m%d")}"
