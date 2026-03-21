@@ -1,10 +1,14 @@
-// config-file for  autorun_deskpi
+/ config-file for  autorun_deskpi
 
+DEBUG: False
 // directories
 PWDprot: /home/pi/_prot/
 PWDlog: /home/pi/_prot/
 
 // MQTT
 IPbroker: 192.168.178.100
-topic: test_channel
 Port: 1883
+TopicPubClimate: climate/office/1
+TopicPubCPU: pi/temps/deskpi
+TopicSub: led/office/1
+Sendinterval: 10
