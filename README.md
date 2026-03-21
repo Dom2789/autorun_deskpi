@@ -59,13 +59,14 @@ uv sync
 Create a config file (see `config_autorun.txt` for reference). The production path expected by `autorun.py` is `/home/pi/_config/config_autorun.txt`.
 
 ```
-PWDprot:      /home/pi/_prot/          // directory for data/protection files
-PWDlog:       /home/pi/_prot/          // directory for log files
-IPbroker:     192.168.178.100          // MQTT broker IP
-TopicPub:     climate/office/2         // topic to publish climate data on
-TopicSub:     led/office/1             // topic to receive LED commands on
-Sendinterval: 15                       // publish interval in seconds
-DEBUG:        False                    // set True for verbose logging
+PWDprot:         /home/pi/_prot/          // directory for data/protection files
+PWDlog:          /home/pi/_prot/          // directory for log files
+IPbroker:        192.168.178.100          // MQTT broker IP
+TopicPubClimate: climate/office/1         // topic to publish climate data on
+TopicPubCPU:     pi/temps/deskpi          // topic to publish cpu diagnostics on 
+TopicSub:        led/office/1             // topic to receive LED commands on
+Sendinterval:    10                       // publish interval in seconds
+DEBUG:           False                    // set True for verbose logging
 ```
 
 Lines starting with `//` are treated as comments.
