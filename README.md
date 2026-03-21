@@ -107,11 +107,20 @@ sudo systemctl start python-script
 
 ### Published (climate data)
 
-**Topic**: value of `TopicPub`
+**Topic**: value of `TopicPubClimate`
 
 **Payload** (string):
 ```
 [HH:MM:SS] [23.50C] [1013.25hPa] [45.30%]
+```
+
+### Published (cpu data)
+
+**Topic**: value of `TopicPubCPU`
+
+**Payload** (string):
+```
+Temperature: 37.3°C CPU: 0.0%
 ```
 
 ### Subscribed (LED control)
