@@ -15,6 +15,7 @@ class Mqtt_Publish_Routine(threading.Thread):
         self.topics = topics
         self._logger = logging.getLogger("MQTT Pub")
         self._logger.info(f"Broker: {self.MQTT_SERVER}, Topics: {topics}")
+        self.timestamp = ""
         if sleep_time.isnumeric():
             self.sleep_time = int(sleep_time)
         else:
@@ -23,6 +24,8 @@ class Mqtt_Publish_Routine(threading.Thread):
 
     def run(self):
         while True:
+            self.timestamp = strftime("%H:%M:%S")
+
             payload = self.payload_climate()
             self.publish_payload(self.topics["climate"],payload)
 
@@ -32,7 +35,7 @@ class Mqtt_Publish_Routine(threading.Thread):
             sleep(self.sleep_time)
 
     def payload_climate(self):
-        timestamp = strftime("%H:%M:%S")
+
         data = self.data.climate_tupel
         if data is None:
             temp = 0.0
@@ -41,13 +44,13 @@ class Mqtt_Publish_Routine(threading.Thread):
         else:
             temp, pres, humi = data
 
-        string = f"[{timestamp}] [{temp:.2f}C] [{pres:.2f}hPa] [{humi:.2f}%]"
+        string = f"[{self.timestamp}] [{temp:.2f}C] [{pres:.2f}hPa] [{humi:.2f}%]"
 
         return string
 
     def payload_cpu_temp(self):
         cpu = psutil.cpu_percent(interval=1)
-        string = f"Temperature: {self.vcgm.measure_temp()}°C CPU: {cpu}%"
+        string = f"[{self.timestamp}] [temp: {self.vcgm.measure_temp()}°C] [load: {cpu}%]"
 
         return string
 
