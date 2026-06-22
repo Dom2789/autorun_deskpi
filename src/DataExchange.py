@@ -74,3 +74,23 @@ def parse_led_strip(data:Data, led:dict):
     data.led_strip.color = (led["red"], led["green"], led["blue"])
 
     return None
+
+"""
+payload from home assistant:
+{"state":"ON", "brightness":255, "color":{"r":0,"g":158,"b":243}}
+"""
+
+def parse_led_strip_HA(data:Data, led:dict):
+    if led["state"]=="OFF":
+        data.led_strip.brightness = 0
+        data.led_strip.mode = "wipe"
+        data.led_strip.color = (0,0,0)
+    else:
+        if "color" in led:
+            data.led_strip.color = (led["color"]["r"],led["color"]["g"],led["color"]["b"])
+        if "brightness" in led:
+            data.led_strip.brightness = led["brightness"]
+
+    data.led_strip.new_data = True
+
+    return None

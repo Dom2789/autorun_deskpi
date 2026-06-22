@@ -1,7 +1,6 @@
 import threading, psutil
 from .DataExchange import Data
 import paho.mqtt.publish as publish
-import paho.mqtt.subscribe as subscribe
 from time import sleep, strftime
 import logging
 from vcgencmd import Vcgencmd
@@ -60,3 +59,4 @@ class Mqtt_Publish_Routine(threading.Thread):
             self._logger.info(payload)
         except TimeoutError as e:
             self._logger.warning(f"[{e}][{payload}")
+
