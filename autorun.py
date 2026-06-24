@@ -1,5 +1,4 @@
 #!/usr/bin/python3
-from DataExchange import parse_led_strip_HA
 from src.DisplayRoutine import Display_Routine
 from src.NetworkRoutine import Network_Routine
 from src.LedStripRoutine import Strip_Routine
@@ -9,7 +8,7 @@ from src._lib.Config import Config
 import logging
 from src.MqttPublishRoutine import Mqtt_Publish_Routine
 from src.MqttSubscribeRoutine import Mqtt_Subscribe_Routine
-from src.DataExchange import parse_led_strip
+from src.DataExchange import parse_led_strip, parse_led_strip_HA
 
 
 if __name__ == "__main__":
