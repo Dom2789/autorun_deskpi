@@ -27,6 +27,7 @@ class Strip_Routine(threading.Thread):
         self.data = Data()
         # variables for temperature gradient
         self.gradient_colors = ((211, 22, 45), (0, 48, 143)) # fire engine red, dark powder blue
+        self.COLOR_Tupel = ((52, 225, 235), (240, 3, 252))
         self.t_max = 30
         self.t_min = 15
         self._logger = logging.getLogger("LED_strip")
@@ -42,12 +43,15 @@ class Strip_Routine(threading.Thread):
         mode = ""
         # setting strip to color depending on season
         self.colorWipe(self.strip, self.selectColorSeasonal(), 10)
+        self.data.led_strip.color = self.selectColorSeasonal(ret_val_tupel=True)
+        publish.single(self.pub_topic_state, self.data.led_strip.to_json(), hostname=self.broker_ip)
 
         # waiting for changes
         while True:
             if self.data.led_strip.new_data:
                 mode = self.data.led_strip.mode
                 color = Color(self.data.led_strip.color[0],self.data.led_strip.color[1],self.data.led_strip.color[2])
+                self.strip.setBrightness(self.data.led_strip.brightness)   # apply incoming brightness
                 if mode in ["wipe", "temperature"]:
                     self.data.led_strip.new_data = False
 
@@ -86,15 +90,21 @@ class Strip_Routine(threading.Thread):
         """
 
     
-    def selectColorSeasonal(self):
+    def selectColorSeasonal(self, ret_val_tupel=False):
         today = datetime.now()
         spring_start = datetime(today.year, 3, 20)
         autum_start = datetime(today.year, 9, 22) 
 
-        if (today > spring_start) and (today < autum_start): 
-            color = self.COLOR[0]
+        if (today > spring_start) and (today < autum_start):
+            if ret_val_tupel:
+                color = self.COLOR_Tupel[0]
+            else:
+                color = self.COLOR[0]
         else:
-            color = self.COLOR[1]   
+            if ret_val_tupel:
+                color = self.COLOR_Tupel[1]
+            else:
+                color = self.COLOR[1]
 
         return color
 
