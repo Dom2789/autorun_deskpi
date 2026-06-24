@@ -1,3 +1,4 @@
+import json
 import threading
 from dataclasses import dataclass
 
@@ -36,6 +37,21 @@ class LedStrip:
     @color.setter
     def color(self, new_value):
         self._color = new_value
+
+    def to_json(self):
+        if  self.color == (0,0,0):
+            return json.dumps({"state": "OFF"})
+        else:
+            return json.dumps({
+            "state": "ON",
+            "brightness": self.brightness,
+            "color": {
+                "r": self.color[0],
+                "g": self.color[1],
+                "b": self.color[2],
+            },
+            "color_mode": "rgb",
+        })
 
     # JSON-representation
     """
@@ -82,7 +98,7 @@ payload from home assistant:
 
 def parse_led_strip_HA(data:Data, led:dict):
     if led["state"]=="OFF":
-        data.led_strip.brightness = 0
+        #data.led_strip.brightness = 0
         data.led_strip.mode = "wipe"
         data.led_strip.color = (0,0,0)
     else:

@@ -4,9 +4,10 @@ from rpi_ws281x import PixelStrip, Color
 from datetime import datetime
 from .DataExchange import Data
 import logging
+import paho.mqtt.publish as publish
 
 class Strip_Routine(threading.Thread):
-    def __init__(self):
+    def __init__(self, broker_ip:str="", pub_topic_state:str=""):
         super(Strip_Routine, self).__init__()
         # LED strip configuration:
         LED_COUNT = 120        # Number of LED pixels.
@@ -29,8 +30,14 @@ class Strip_Routine(threading.Thread):
         self.t_max = 30
         self.t_min = 15
         self._logger = logging.getLogger("LED_strip")
-    
-    
+        # parameters to publish state for home assistant use
+        self.broker_ip = broker_ip
+        self.pub_topic_state = pub_topic_state
+        if broker_ip == "" or pub_topic_state == "":
+            self.publish_state_active = False
+        else:
+            self.publish_state_active = True
+
     def run(self):
         mode = ""
         # setting strip to color depending on season
@@ -42,12 +49,15 @@ class Strip_Routine(threading.Thread):
                 mode = self.data.led_strip.mode
                 color = Color(self.data.led_strip.color[0],self.data.led_strip.color[1],self.data.led_strip.color[2])
                 if mode in ["wipe", "temperature"]:
-                    i = 15
                     self.data.led_strip.new_data = False
 
             match mode:
                 case "wipe":
                     self.colorWipe(self.strip, color, 10)
+                    if self.publish_state_active:
+                        payload=self.data.led_strip.to_json()
+                        publish.single(self.pub_topic_state, payload, hostname=self.broker_ip)
+                        self._logger.info(payload)
                     mode = ""
 
                 case "rainbow":
@@ -61,17 +71,6 @@ class Strip_Routine(threading.Thread):
                     self.data.led_strip.new_data = False
                     mode = "wipe"
 
-                case "temperature":
-                    #gradient = self.temperature_gradient(self.data.climate_tupel[0], self.gradient_colors[1], self.gradient_colors[0])
-                    gradient = self.temperature_gradient(i, self.gradient_colors[1], self.gradient_colors[0])
-                    self._logger.debug(f"Color calculated for temperature {self.data.climate_tupel[0]}°C: {gradient}")
-                    gradient = Color(gradient[0], gradient[1], gradient[2])
-                    self.colorWipe(self.strip, gradient, 10)
-                    time.sleep(1) 
-                    i += 1
-                    if i > 30:
-                        i=15                 
-            
             # Sleep
             timer = 0
             while (timer < self.poll_secs) and mode in ["", "temperature"]:

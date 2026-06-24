@@ -1,8 +1,6 @@
 import threading
 from .DataExchange import Data
-import paho.mqtt.publish as publish
 import paho.mqtt.subscribe as subscribe
-from time import sleep, strftime
 import logging
 import json
 from typing import Callable
