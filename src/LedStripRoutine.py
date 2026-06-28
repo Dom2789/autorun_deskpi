@@ -45,7 +45,7 @@ class Strip_Routine(threading.Thread):
         self.colorWipe(self.strip, self.selectColorSeasonal(), 10)
         self.data.led_strip.color = self.selectColorSeasonal(ret_val_tupel=True)
         payload=self.data.led_strip.to_json()
-        publish.single(self.pub_topic_state, payload, hostname=self.broker_ip)
+        publish.single(self.pub_topic_state, payload, hostname=self.broker_ip, retain=True)
         self._logger.info(payload)
 
         # waiting for changes
