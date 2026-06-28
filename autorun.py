@@ -15,7 +15,7 @@ if __name__ == "__main__":
     config = Config("/home/pi/_config/config_autorun.txt")
     lg.setup_logging(config.get_item('PWDprot'), "auto_", add_date_to_name=True, debug=config.get_bool("DEBUG"))
     logger = logging.getLogger("autorun")
-    topics = {"climate": config.get_item("TopicPubClimate"), "cpu": config.get_item("TopicPubCPU"), "PubClimateHA": config.get_item("PubClimateHA")}
+    topics = {"climate": config.get_item("TopicPubClimate"), "cpu": config.get_item("TopicPubCPU"), "climateHA": config.get_item("PubClimateHA")}
 
     DR = Display_Routine()
     NR = Network_Routine()
