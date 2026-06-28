@@ -28,6 +28,9 @@ class Mqtt_Publish_Routine(threading.Thread):
             payload = self.payload_climate()
             self.publish_payload(self.topics["climate"],payload)
 
+            payload = self.payload_climate_homeassistant()
+            self.publish_payload(self.topics["climateHA"],payload)
+
             payload = self.payload_cpu_temp()
             self.publish_payload(self.topics["cpu"], payload)
 
@@ -44,6 +47,19 @@ class Mqtt_Publish_Routine(threading.Thread):
             temp, pres, humi = data
 
         string = f"[{self.timestamp}] [{temp:.2f}C] [{pres:.2f}hPa] [{humi:.2f}%]"
+
+        return string
+
+    def payload_climate_homeassistant(self):
+        data = self.data.climate_tupel
+        if data is None:
+            temp = 0.0
+            pres = 0.0
+            humi = 0.0
+        else:
+            temp, pres, humi = data
+
+        string = f'{{"temp":{temp:.2f},"pressure":{pres:.2f},"humidity":{humi:.2f}}}'
 
         return string
 
