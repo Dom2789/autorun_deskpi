@@ -15,11 +15,14 @@ if __name__ == "__main__":
     config = Config("/home/pi/_config/config_autorun.txt")
     lg.setup_logging(config.get_item('PWDprot'), "auto_", add_date_to_name=True, debug=config.get_bool("DEBUG"))
     logger = logging.getLogger("autorun")
-    topics = {"climate": config.get_item("TopicPubClimate"), "cpu": config.get_item("TopicPubCPU"), "climateHA": config.get_item("PubClimateHA")}
+    topics = {"climate": config.get_item("TopicPubClimate"),
+              "cpu": config.get_item("TopicPubCPU"),
+              "climateHA": config.get_item("PubClimateHA"),
+              "outside": config.get_item("PubOutside")}
 
     DR = Display_Routine()
     NR = Network_Routine()
-    MPR = Mqtt_Publish_Routine(config.get_item("IPbroker"), topics, config.get_item("Sendinterval"))
+    MPR = Mqtt_Publish_Routine(config.get_item("IPbroker"), topics, config.get_item("1wire"), config.get_item("Sendinterval"))
     MSR = Mqtt_Subscribe_Routine(config.get_item("IPbroker"), config.get_item("TopicSub"), parse_led_strip)
     HASR = Mqtt_Subscribe_Routine(config.get_item("IPbroker"), config.get_item("SubLED1"), parse_led_strip_HA)
     MPR.start()

@@ -1,9 +1,11 @@
-/ config-file for  autorun_deskpi
+// config-file for  autorun_deskpi
 
 DEBUG: False
 // directories
 PWDprot: /home/pi/_prot/
 PWDlog: /home/pi/_prot/
+// Path to the directory containing device files for 1-wire devices
+1wire: "/sys/bus/w1/devices/"
 
 // MQTT
 IPbroker: 192.168.178.100
@@ -12,3 +14,9 @@ TopicPubClimate: climate/office/1
 TopicPubCPU: pi/temps/deskpi
 TopicSub: led/office/1
 Sendinterval: 10
+
+// Home Assistant
+SubLED1: led/office/1/set
+PubLED1: led/office/1/state
+PubClimateHA: climate/office/2
+PubOutside: climate/outside/1
