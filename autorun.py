@@ -21,7 +21,6 @@ if __name__ == "__main__":
               "outside": config.get_item("PubOutside")}
 
     DR = Display_Routine()
-    NR = Network_Routine()
     MPR = Mqtt_Publish_Routine(config.get_item("IPbroker"), topics, config.get_item("1wire"), config.get_item("Sendinterval"))
     MSR = Mqtt_Subscribe_Routine(config.get_item("IPbroker"), config.get_item("TopicSub"), parse_led_strip)
     HASR = Mqtt_Subscribe_Routine(config.get_item("IPbroker"), config.get_item("SubLED1"), parse_led_strip_HA)
@@ -29,7 +28,6 @@ if __name__ == "__main__":
     MSR.start()
     HASR.start()
     DR.start()
-    NR.start()
 
     sleep(5) 
     SR = Strip_Routine(config.get_item("IPbroker"), config.get_item("PubLED1"))

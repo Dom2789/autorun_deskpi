@@ -4,6 +4,7 @@ import threading
 from .DataExchange import Data
 
 class Network_Routine(threading.Thread):
+    # outdated, migrated to MQTT
     def __init__(self):
         super(Network_Routine,self).__init__()
         self.data = Data()
