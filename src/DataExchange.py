@@ -107,6 +107,7 @@ def parse_led_strip_HA(data:Data, led:dict):
         if "brightness" in led:
             data.led_strip.brightness = led["brightness"]
 
+    data.led_strip.mode = "wipe"
     data.led_strip.new_data = True
 
     return None
