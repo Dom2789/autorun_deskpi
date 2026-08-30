@@ -4,7 +4,7 @@ from rpi_ws281x import PixelStrip, Color
 from datetime import datetime
 from .DataExchange import Data
 import logging
-import paho.mqtt.publish as publish
+import paho.mqtt.client as mqtt
 
 class Strip_Routine(threading.Thread):
     def __init__(self, broker_ip:str="", pub_topic_state:str=""):
@@ -38,6 +38,10 @@ class Strip_Routine(threading.Thread):
             self.publish_state_active = False
         else:
             self.publish_state_active = True
+            self.client = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2)
+            self.client.will_set(self.pub_topic_state, '{"state":"OFF"}', qos=1, retain=True)
+            self.client.connect(self.broker_ip, 1883, keepalive=60)
+            self.client.loop_start() # background network thread
 
     def run(self):
         mode = ""
@@ -45,7 +49,8 @@ class Strip_Routine(threading.Thread):
         self.colorWipe(self.strip, self.selectColorSeasonal(), 10)
         self.data.led_strip.color = self.selectColorSeasonal(ret_val_tupel=True)
         payload=self.data.led_strip.to_json()
-        publish.single(self.pub_topic_state, payload, hostname=self.broker_ip, retain=True)
+        if self.publish_state_active:
+            self.client.publish(self.pub_topic_state, payload, qos=1)
         self._logger.info(payload)
 
         # waiting for changes
@@ -62,12 +67,12 @@ class Strip_Routine(threading.Thread):
                     self.colorWipe(self.strip, color, 10)
                     if self.publish_state_active:
                         payload=self.data.led_strip.to_json()
-                        publish.single(self.pub_topic_state, payload, hostname=self.broker_ip)
+                        self.client.publish(self.pub_topic_state, payload, qos=1)
                         self._logger.info(payload)
                     mode = ""
 
                 case "rainbow":
-                    self.rainbowCycle(self.strip, iterations=10)
+                    self.rainbowCycle(self.strip, iterations=10)     
                     color = self.selectColorSeasonal()
                     self.data.led_strip.new_data = False
                     mode = "wipe"
