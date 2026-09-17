@@ -7,7 +7,7 @@ from vcgencmd import Vcgencmd
 import glob
 
 class Mqtt_Publish_Routine(threading.Thread):
-    def __init__(self, broker_IP:str, topics:dict[str,str], dir_1wire:str ,sleep_time:str="10"):
+    def __init__(self, broker_IP:str, topics:dict[str,str], dir_1wire:str ,sleep_time:str="10", publish_cpu:bool=False):
         super(Mqtt_Publish_Routine, self).__init__()
         self.data = Data()
         self.vcgm = Vcgencmd()
@@ -16,6 +16,7 @@ class Mqtt_Publish_Routine(threading.Thread):
         self._logger = logging.getLogger("MQTT Pub")
         self._logger.info(f"Broker: {self.MQTT_SERVER}, Topics: {topics}")
         self.timestamp = ""
+        self.publish_cpu = publish_cpu
         # Finds the first device folder that starts with "28", specific to DS18B20
         device_folder = glob.glob(dir_1wire + "28*")[0]
         # Device file containing the temperature data
@@ -41,8 +42,9 @@ class Mqtt_Publish_Routine(threading.Thread):
             if payload != "":
                 self.publish_payload(self.topics["outside"], payload)
 
-            payload = self.payload_cpu_temp()
-            self.publish_payload(self.topics["cpu"], payload)
+            if self.publish_cpu:
+                payload = self.payload_cpu_temp()
+                self.publish_payload(self.topics["cpu"], payload)
 
             sleep(self.sleep_time)
 
