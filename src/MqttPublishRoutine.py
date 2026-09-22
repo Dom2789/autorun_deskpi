@@ -17,10 +17,12 @@ class Mqtt_Publish_Routine(threading.Thread):
         self._logger.info(f"Broker: {self.MQTT_SERVER}, Topics: {topics}")
         self.timestamp = ""
         self.publish_cpu = publish_cpu
+        self.sleep_time = sleep_time
         # Finds the first device folder that starts with "28", specific to DS18B20
         device_folder = glob.glob(dir_1wire + "28*")[0]
         # Device file containing the temperature data
-        self.sleep_time = sleep_time
+        self.onewire_device_file = device_folder + "/w1_slave"
+        
 
     def run(self):
         while True:
