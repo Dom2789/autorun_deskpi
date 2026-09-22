@@ -7,7 +7,7 @@ from vcgencmd import Vcgencmd
 import glob
 
 class Mqtt_Publish_Routine(threading.Thread):
-    def __init__(self, broker_IP:str, topics:dict[str,str], dir_1wire:str ,sleep_time:str="10", publish_cpu:bool=False):
+    def __init__(self, broker_IP:str, topics:dict[str,str], dir_1wire:str ,sleep_time:int=10, publish_cpu:bool=False):
         super(Mqtt_Publish_Routine, self).__init__()
         self.data = Data()
         self.vcgm = Vcgencmd()
@@ -20,12 +20,7 @@ class Mqtt_Publish_Routine(threading.Thread):
         # Finds the first device folder that starts with "28", specific to DS18B20
         device_folder = glob.glob(dir_1wire + "28*")[0]
         # Device file containing the temperature data
-        self.onewire_device_file = device_folder + "/w1_slave"
-        if sleep_time.isnumeric():
-            self.sleep_time = int(sleep_time)
-        else:
-            self._logger.error(f"Value '{sleep_time}' given for sleep_time is not a number. sleep_time is set to default value (10).") 
-            self.sleep_time = 10
+        self.sleep_time = sleep_time
 
     def run(self):
         while True:

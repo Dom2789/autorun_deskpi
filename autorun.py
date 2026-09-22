@@ -21,7 +21,7 @@ if __name__ == "__main__":
     broker = cfg["mqtt"]["broker"]
 
     DR = Display_Routine()
-    MPR = Mqtt_Publish_Routine(broker, topics, cfg["paths"]["onewire"], str(cfg["mqtt"]["send_interval"]))
+    MPR = Mqtt_Publish_Routine(broker, topics, cfg["paths"]["onewire"], cfg["mqtt"]["send_interval"])
     MSR = Mqtt_Subscribe_Routine(broker, cfg["mqtt"]["topics"]["sub_led1"], parse_led_strip)
     HASR = Mqtt_Subscribe_Routine(broker, cfg["homeassistant"]["sub_led1"], parse_led_strip_HA)
     MPR.start()
