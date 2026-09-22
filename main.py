@@ -1,34 +1,31 @@
-import src.DataExchange
 import src._lib.logger as lg
 import logging
-from src.MqttSubscribeRoutine import Mqtt_Subscribe_Routine
-from src.DataExchange import LedStrip, parse_led_strip_HA
-import paho.mqtt.publish as publish
+from src._lib.ConfigToml import ConfigToml
+from pprint import pprint
 
 def main():
 
+    cfg = ConfigToml("/Users/dom/temp/autorun_deskpi.toml")
+    print(cfg)
 
-    lg.setup_logging("/home/dom/temp/", "auto_", add_date_to_name=True)
+    print(cfg["paths"]["log"])
+    print(cfg["mqtt"]["topics"]["pub_climate"])
+    print(cfg["mqtt"]["topics"]["pub_cpu"])
+    print(cfg["homeassistant"]["pub_climate"])
+    print(cfg["homeassistant"]["pub_outside"])
+    print(cfg["mqtt"]["broker"])
+    print(cfg["paths"]["onewire"])
+    print(cfg["mqtt"]["send_interval"])
+    print(cfg["mqtt"]["topics"]["sub_led1"])
+    print(cfg["homeassistant"]["sub_led1"])
+    print(cfg["homeassistant"]["pub_led1"])
+
+    lg.setup_logging(cfg["paths"]["log"], "auto_", add_date_to_name=True)
     logger = logging.getLogger("Main")
 
     logger.info("Hello from autorun-deskpi!")
 
-    mqtt()
 
-    data = src.DataExchange.Data()
-
-    while True:
-        if data.led_strip.new_data:
-            print(data.led_strip.to_json())
-            publish.single("led/living/1/state", data.led_strip.to_json(), hostname="192.168.178.100")
-            data.led_strip.new_data = False
-
-def mqtt():
-    #PR = Mqtt_Publish_Routine(config.get_item("IPbroker"), config.get_item("TopicPub"), config.get_item("Sendinterval"))
-    #PR.start()
-
-    SR = Mqtt_Subscribe_Routine("192.168.178.100", "led/living/1/set", parse_led_strip_HA)
-    SR.start()
 
 
 if __name__ == "__main__":

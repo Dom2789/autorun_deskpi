@@ -1,0 +1,24 @@
+# config-file for autorun_deskpi
+
+debug = false
+
+[paths]
+prot = "/home/pi/_prot/"
+log = "/home/pi/_prot/"
+onewire = "/sys/bus/w1/devices/"
+
+[mqtt]
+broker = "192.168.1.225"
+port = 1883
+send_interval = 10
+
+[mqtt.topics]
+pub_climate = "climate/office/1"
+pub_cpu = "pi/temps/deskpi"
+sub_led1 = "led/office/1"
+
+[homeassistant]
+sub_led1 = "led/office/1/set"
+pub_led1 = "led/office/1/state"
+pub_climate = "climate/office/2"
+pub_outside = "climate/outside/1"
